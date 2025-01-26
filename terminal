@@ -1,0 +1,34 @@
+curl -s "https://laravel.build/news-aggregator" | bash
+cd news-aggregator 
+
+# Create Article model with migration
+./vendor/bin/sail artisan make:model Article -m
+
+# Create UserPreference model with migration
+./vendor/bin/sail artisan make:model UserPreference -m 
+
+# Create API controllers
+./vendor/bin/sail artisan make:controller Api/AuthController
+./vendor/bin/sail artisan make:controller Api/ArticleController --api
+./vendor/bin/sail artisan make:controller Api/UserPreferenceController --api 
+
+# Create API resources
+./vendor/bin/sail artisan make:resource ArticleResource
+./vendor/bin/sail artisan make:resource UserPreferenceResource 
+
+# Create article scraper command
+./vendor/bin/sail artisan make:command ScrapeArticles 
+
+# Create form requests for validation
+./vendor/bin/sail artisan make:request Auth/LoginRequest
+./vendor/bin/sail artisan make:request Auth/RegisterRequest
+./vendor/bin/sail artisan make:request UserPreference/UpdatePreferenceRequest 
+
+# Start Docker containers
+./vendor/bin/sail up -d
+
+# Generate application key
+./vendor/bin/sail artisan key:generate
+
+# Run migrations
+./vendor/bin/sail artisan migrate 
